@@ -12,7 +12,7 @@ node {
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
 
     def toolbelt = tool 'toolbelt'
-    println ${toolbelt}
+    println toolbelt
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
