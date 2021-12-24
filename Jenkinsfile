@@ -36,9 +36,9 @@ node {
 			
 			// need to pull out assigned username
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy"
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy -u ${HUB_ORG}"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy"
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -u ${HUB_ORG}"
 			}
 			  
             printf rmsg
