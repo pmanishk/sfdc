@@ -38,7 +38,7 @@ node {
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:manifest:create -m ApexClass"
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:retrieve -m ApexClass"
 			}
 			  
             printf rmsg
