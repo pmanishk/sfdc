@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <assignments>
+        <description>clear the override status on status change of case</description>
+        <name>Copy_1_of_Update_override_status_to_null</name>
+        <label>Copy 1 of Update override status to null</label>
+        <locationX>314</locationX>
+        <locationY>719</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Override_Status__c</assignToReference>
+            <operator>Assign</operator>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>clear the override status on status change of case</description>
+        <name>Update_override_status_to_null</name>
+        <label>Update override status to null</label>
+        <locationX>842</locationX>
+        <locationY>611</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Override_Status__c</assignToReference>
+            <operator>Assign</operator>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Approval_Status_updated_to</name>
+        <label>Approval Status updated to?</label>
+        <locationX>248</locationX>
+        <locationY>503</locationY>
+        <defaultConnector>
+            <targetReference>Copy_1_of_Is_override_status_not_equal_to_NIGO</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Rejected</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Compliance_Approval_Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Rejected</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Compliance_Approval_Status__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Override_Status_to_Rejected</targetReference>
+            </connector>
+            <label>Rejected</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_Is_override_status_not_equal_to_NIGO</name>
+        <label>Copy 1 of Is override status not equal to NIGO</label>
+        <locationX>446</locationX>
+        <locationY>611</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Override_Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>NIGO</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_Update_override_status_to_null</targetReference>
+            </connector>
+            <label>Copy 1 of Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_override_status_not_equal_to_NIGO</name>
+        <label>Is override status not equal to NIGO</label>
+        <locationX>974</locationX>
+        <locationY>503</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Override_Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>NIGO</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_override_status_to_null</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Verify if the status is changed</description>
+        <name>Is_status_changed</name>
+        <label>Is status changed?</label>
+        <locationX>990</locationX>
+        <locationY>287</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_override</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Status_changed_to</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>From the approval process if the Case is rejected update Override Status to NIGo</description>
+        <name>Status_changed_to</name>
+        <label>Status changed to?</label>
+        <locationX>611</locationX>
+        <locationY>395</locationY>
+        <defaultConnector>
+            <targetReference>Is_override_status_not_equal_to_NIGO</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Caase_Review</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Approval_Status_updated_to</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Caase Review</label>
+        </rules>
+    </decisions>
+    <description>Flow to handle the fast fields update of created or updated events</description>
+    <interviewLabel>Case Fast Fields Created Or Updated {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Fast Fields Created Or Updated</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Override_Status_to_Rejected</name>
+        <label>Update Override Status to Rejected</label>
+        <locationX>50</locationX>
+        <locationY>611</locationY>
+        <inputAssignments>
+            <field>Override_Status__c</field>
+            <value>
+                <stringValue>NIGO</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>864</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_status_changed</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

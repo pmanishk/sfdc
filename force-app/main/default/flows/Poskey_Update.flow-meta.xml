@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <description>Migrated from the: Poskey Update workflow rule
+Workflow rule description: AppCrown - Poskey update&quot;</description>
+    <formulas>
+        <name>SaveDesctoName</name>
+        <dataType>String</dataType>
+        <expression>LEFT( {!$Record.Description__c}, 80 )</expression>
+    </formulas>
+    <label>Poskey Update</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Description_to_Name</name>
+        <label>Description to Name</label>
+        <locationX>176</locationX>
+        <locationY>395</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Description__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue></stringValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>SaveDesctoName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <description>FA.Cusip</description>
+        <name>mainUpdate</name>
+        <label>mainUpdate</label>
+        <locationX>176</locationX>
+        <locationY>287</locationY>
+        <connector>
+            <targetReference>Description_to_Name</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Poskey__c</field>
+            <value>
+                <stringValue>{!$Record.FinServ__FinancialAccount__r.FinServ__FinancialAccountNumber__c}.{!$Record.Cusip__c}</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>mainUpdate</targetReference>
+        </connector>
+        <object>FinServ__FinancialHolding__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

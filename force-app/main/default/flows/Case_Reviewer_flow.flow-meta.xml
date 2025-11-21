@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <decisions>
+        <name>Case_owner</name>
+        <label>Case owner?</label>
+        <locationX>1766</locationX>
+        <locationY>287</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Account_Services</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:Group.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>SIS_Account_Services</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Status_Changed</targetReference>
+            </connector>
+            <label>Account Services</label>
+        </rules>
+        <rules>
+            <name>Allocations</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:Group.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>SIS_Allocations</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Status_Changed1</targetReference>
+            </connector>
+            <label>Allocations</label>
+        </rules>
+        <rules>
+            <name>Liquidations</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:Group.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>SIS_Liquidations</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Status_Changed2</targetReference>
+            </connector>
+            <label>Liquidations</label>
+        </rules>
+        <rules>
+            <name>Trading_Check</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:Group.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Trading_Check</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Trading Check</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Status_Changed</name>
+        <label>Status Changed?</label>
+        <locationX>314</locationX>
+        <locationY>395</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Case_Claimed_to_Case_Review</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Claimed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_first_case_Review_Ops</targetReference>
+            </connector>
+            <label>Case Claimed to Case Review</label>
+        </rules>
+        <rules>
+            <name>Case_Review_to_Closed_Complete_or_compliance_Review</name>
+            <conditionLogic>1 AND (2 OR 3)</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Closed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Compliance Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Second_Reviewer_Ops</targetReference>
+            </connector>
+            <label>Case Review to Closed Complete or compliance Review</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Status_Changed1</name>
+        <label>Status Changed?</label>
+        <locationX>1370</locationX>
+        <locationY>395</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Case_Claimed_to_Case_Review1</name>
+            <conditionLogic>1 AND 2</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Claimed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_first_case_Review_Ops1</targetReference>
+            </connector>
+            <label>Case Claimed to Case Review</label>
+        </rules>
+        <rules>
+            <name>Case_Review_to_Trading_check_or_Pending_compliance</name>
+            <conditionLogic>1 AND (2 OR 3)</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Trading-check</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Compliance</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Second_Reviewer_Ops1</targetReference>
+            </connector>
+            <label>Case Review to Trading-check or Pending compliance</label>
+        </rules>
+        <rules>
+            <name>Final_Review_to_Closed_Complete1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Final Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Closed</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Second_Reviewr_Trading</targetReference>
+            </connector>
+            <label>Final Review to Closed Complete</label>
+        </rules>
+        <rules>
+            <name>TA_Case_Claimed_to_Final_Review</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>TA Case Claimed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Final Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_first_case_review_trading</targetReference>
+            </connector>
+            <label>TA Case Claimed to Final Review</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Status_Changed2</name>
+        <label>Status Changed</label>
+        <locationX>2426</locationX>
+        <locationY>395</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Case_Claimed_to_Final_Review</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Case Claimed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Final Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_first_case_review_trading1</targetReference>
+            </connector>
+            <label>Case Claimed to Final Review</label>
+        </rules>
+        <rules>
+            <name>Final_Review_to_Closed_Complete2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Final Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Closed</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Second_Reviewr_Trading1</targetReference>
+            </connector>
+            <label>Final Review to Closed Complete</label>
+        </rules>
+    </decisions>
+    <description>Removed the logic to update the account owner to Trading check if we status changed to Trading-check
+Update The flow conditional updates as per September 2025 requirements
+10/29 Updated Logic to update on Allocations and Account services. Removed Billing Trade</description>
+    <formulas>
+        <name>CaseOwnerId</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.OwnerId}</expression>
+    </formulas>
+    <interviewLabel>Case - Reviewer flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case - Reviewer flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_first_case_Review_Ops</name>
+        <label>Update first case Review Ops</label>
+        <locationX>50</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>First_Reviewer_Ops__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>First_case_review__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_first_case_Review_Ops1</name>
+        <label>Update first case Review Ops</label>
+        <locationX>842</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>First_Reviewer_Ops__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>First_case_review__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_first_case_review_trading</name>
+        <label>Update first case review trading</label>
+        <locationX>1634</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>First_Case_Review_Trading__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>First_Reviewer_Trading__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_first_case_review_trading1</name>
+        <label>Update first case review trading</label>
+        <locationX>2162</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>First_Case_Review_Trading__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>First_Reviewer_Trading__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Second_Reviewer_Ops</name>
+        <label>Update Second Reviewer Ops</label>
+        <locationX>314</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>Second_Reviewer_Ops__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Second_case_Review__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Second_Reviewer_Ops1</name>
+        <label>Update Second Reviewer Ops</label>
+        <locationX>1106</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>Second_Reviewer_Ops__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Second_case_Review__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Second_Reviewr_Trading</name>
+        <label>Update Second Reviewr Trading</label>
+        <locationX>1370</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>Second_Case_Review_Trading__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Second_Reviewer_Trading__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Second_Reviewr_Trading1</name>
+        <label>Update Second Reviewr Trading</label>
+        <locationX>2426</locationX>
+        <locationY>503</locationY>
+        <inputAssignments>
+            <field>Second_Case_Review_Trading__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Second_Reviewer_Trading__c</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>1640</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Case_owner</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>testVar</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

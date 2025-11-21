@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <choices>
+        <name>Identifer</name>
+        <choiceText>Advisor Identifier</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>User</name>
+        <choiceText>Allocated User</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <interviewLabel>Identifier Assignment {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Identifier Assignment</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Identifer_Assignment</name>
+        <label>Identifer Assignment</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Add_User</name>
+            <choiceReferences>User</choiceReferences>
+            <choiceReferences>Identifer</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Add User/Identifier</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Identifer_Assignment</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+</Flow>

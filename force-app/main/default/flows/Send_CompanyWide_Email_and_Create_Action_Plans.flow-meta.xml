@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Company_Wide_Email</name>
+        <label>Send Company Wide Email</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <actionName>Account.Company_Wide_Onboarding_Client_Alert</actionName>
+        <actionType>emailAlert</actionType>
+        <connector>
+            <targetReference>Create_Onboarding_Action_Plan</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <interviewLabel>Send CompanyWide Email and Create Action Plans {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Send Company Wide Email and Create Action Plans</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Onboarding_Action_Plan</name>
+        <label>Create Onboarding Action Plan</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <inputAssignments>
+            <field>ActionPlanTemplateVersionId</field>
+            <value>
+                <stringValue>0PRDn000000tCMROA2</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>AA Onboarding Procedure</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>TargetId</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>ActionPlan</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Company_Wide_Email</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
